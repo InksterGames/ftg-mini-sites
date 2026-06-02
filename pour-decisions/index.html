@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pour Decisions — Custom Drinking Game Generator</title>
+<meta name="description" content="Generate your perfect drinking game in seconds. Set players, vibe, and drink. Rules, forfeits, chaos mechanics.">
+<meta property="og:title" content="Pour Decisions — Custom Drinking Game Generator">
+<meta property="og:description" content="Build your drinking game. Rules, forfeits, chaos. Instant. Free.">
+<meta property="og:url" content="https://pourdecisions.party/">
+<meta name="twitter:title" content="Pour Decisions — Custom Drinking Game Generator">
+<meta name="twitter:description" content="Custom drinking games. Instant. Free. Chaotic.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Pour Decisions","description":"Custom drinking game generator with chaos mechanics","applicationCategory":"GameApplication","url":"https://pourdecisions.party/","operatingSystem":"All"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How do I generate a drinking game?","acceptedAnswer":{"@type":"Answer","text":"Select number of players, vibe, what you're drinking. The generator creates a unique game with rules, FTG-inspired Stroop Effect challenges, forfeits, and bonus chaos cards."}},
+  {"@type":"Question","name":"Is Drink or Sink free?","acceptedAnswer":{"@type":"Answer","text":"Completely free. No signup. Generate as many games as you want."}}
+]}
+</script>
+<style>
+:root {
+  --bg: #121212; --surface: #181818; --surface-hover: #1f1f1f;
+  --text: #ffffff; --text-secondary: #b3b3b3;
+  --accent: #ff6b35; --accent2: #e83e8c; --border: #4d4d4d;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center;
+  overflow-x: hidden; -webkit-font-smoothing: antialiased;
+}
+.container { width: 100%; max-width: 480px; padding: 24px 16px; }
+header { text-align: center; padding: 20px 0 8px; opacity: 0; }
+.logo-tag { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; }
+h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.5px; line-height: 1.05; }
+h1 .grad { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.subtitle { font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px; font-weight: 400; }
+
+.setup { opacity: 0; }
+.field { margin-bottom: 18px; }
+.field-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; }
+.slider-row { display: flex; align-items: center; gap: 12px; }
+.slider-row input[type=range] { flex:1; accent-color: var(--accent); }
+.slider-row .val { font-weight: 700; font-size: 1.1rem; color: var(--accent); min-width: 36px; text-align: center; }
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  padding: 8px 16px; border-radius: 9999px; font-size: 0.8rem; font-weight: 700;
+  cursor: pointer; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); transition: all 0.25s cubic-bezier(0.25,0.1,0.25,1);
+  user-select: none; letter-spacing: 0.01em;
+}
+.pill:hover { background: var(--surface-hover); color: var(--text); }
+.pill.selected-chill { border-color: #00c9a7; background: rgba(0,201,167,0.10); color: #00c9a7; }
+.pill.selected-party { border-color: var(--accent); background: rgba(255,107,53,0.10); color: var(--accent); }
+.pill.selected-chaos { border-color: #ff1744; background: rgba(255,23,68,0.10); color: #ff1744; }
+.pill.selected-drink { border-color: var(--accent); background: rgba(255,107,53,0.10); color: var(--accent); }
+
+.generate-btn {
+  width: 100%; padding: 18px; border-radius: 9999px; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-size: 1.05rem; font-weight: 900; cursor: pointer;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  transition: transform 0.15s, box-shadow 0.25s; margin: 12px 0 20px;
+  box-shadow: 0 0 0 0 rgba(255,107,53,0.4);
+}
+.generate-btn:active { transform: scale(0.97); }
+.generate-btn:hover { box-shadow: 0 0 32px 4px rgba(255,107,53,0.25); }
+
+.result { display: none; }
+.game-name {
+  text-align: center; font-size: 1.7rem; font-weight: 900; margin: 12px 0 2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.game-subtitle { text-align: center; color: var(--text-secondary); font-size: 0.82rem; margin-bottom: 20px; }
+
+.game-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px 18px; margin: 12px 0;
+  box-shadow: rgba(0,0,0,0.3) 0px 8px 8px;
+  will-change: transform, opacity;
+}
+.game-card h3 { font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.game-card ul { list-style: none; padding:0; }
+.game-card li {
+  padding: 8px 0; border-bottom: 1px solid rgba(77,77,77,0.3); font-size: 0.88rem;
+  line-height: 1.5; display: flex; gap: 8px; align-items: flex-start;
+}
+.game-card li:last-child { border-bottom: none; }
+.game-card li .icon { font-size: 1rem; flex-shrink: 0; }
+
+.btn-row { display: flex; gap: 10px; margin: 16px 0; }
+.action-btn {
+  flex:1; padding: 14px; border-radius: 9999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font-size: 0.85rem;
+  font-weight: 700; cursor: pointer; text-align: center;
+  transition: background 0.25s; letter-spacing: 0.02em;
+}
+.action-btn:hover { background: var(--surface-hover); }
+.action-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+.action-btn.primary:hover { background: #e55a2a; }
+
+.cta-bar { text-align: center; padding: 24px 12px 32px; opacity: 0; }
+.cta-bar a {
+  display: inline-block; background: var(--surface); border: 1px solid var(--accent);
+  color: var(--accent); padding: 11px 28px; border-radius: 9999px;
+  font-weight: 700; text-decoration: none; font-size: 0.85rem;
+  transition: all 0.25s; letter-spacing: 0.02em;
+}
+.cta-bar a:hover { background: var(--accent); color: #fff; }
+.cta-bar p { color: var(--text-secondary); font-size: 0.78rem; margin-top: 8px; }
+.cta-tag { font-size: 0.65rem; color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+
+.toast {
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff; padding: 12px 28px; border-radius: 9999px;
+  font-weight: 700; font-size: 0.85rem; z-index: 99;
+  opacity: 0; pointer-events: none;
+  box-shadow: 0 8px 32px rgba(255,107,53,0.4);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header id="header">
+    <h1>Pour <span class="grad">Decisions</span></h1>
+    <p class="subtitle">Custom drinking games. Instant. Free. Chaotic.</p>
+  </header>
+
+  <div class="setup" id="setup">
+    <div class="field">
+      <div class="field-label">Players</div>
+      <div class="slider-row">
+        <span style="font-size:0.8rem;color:var(--text-secondary)">2</span>
+        <input type="range" min="2" max="20" value="4" id="players" oninput="document.getElementById('playersVal').textContent=this.value">
+        <span class="val" id="playersVal">4</span>
+        <span style="font-size:0.8rem;color:var(--text-secondary)">20</span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Vibe</div>
+      <div class="pill-row" id="vibePills">
+        <div class="pill selected-chill" data-vibe="chill">🌿 Chill</div>
+        <div class="pill" data-vibe="party">🎉 Party</div>
+        <div class="pill" data-vibe="chaos">🔥 Chaos</div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Drinking</div>
+      <div class="pill-row" id="drinkPills">
+        <div class="pill selected-drink" data-drink="beer">🍺 Beer</div>
+        <div class="pill" data-drink="spirits">🥃 Spirits</div>
+        <div class="pill" data-drink="wine">🍷 Wine</div>
+        <div class="pill" data-drink="shots">💀 Shots</div>
+        <div class="pill" data-drink="mixed">🍹 Mixed</div>
+      </div>
+    </div>
+    <button class="generate-btn" id="genBtn" onclick="generate()">Generate My Game</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="game-name" id="gameName"></div>
+    <div class="game-subtitle" id="gameSubtitle"></div>
+    <div id="cardsContainer"></div>
+    <div class="btn-row">
+      <button class="action-btn" onclick="newGame()">New Game</button>
+      <button class="action-btn primary" onclick="shareGame()">Share</button>
+    </div>
+  </div>
+
+  <div class="cta-bar" id="cta">
+    <a href="https://www.f--kthegame.com" target="_blank" rel="noopener" onclick="trackCTA()">Liked this drinking game? There's a deck that makes this look like a warm-up →</a>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const NAMES={chill:['The Gentle Sip Society','Tipsy Trivia Time','Chill & Spill','Low-Key Lit','Mellow Mayhem','The Buzzed Brunch'],party:['Rage Royale','Pour Decisions','Party Protocol','Lit or Quit','Bottom\'s Up Showdown','The Main Event'],chaos:['Absolute Destruction','The Liver Punisher','Regret Roulette','Full Send or Die','The Apocalypse Protocol','No Survivors']};
+const TMPL={chill:{rules:['Everyone gets a drink. No one starts thirsty.','Take turns being Game Master. GM picks a category or challenge.','Sip when someone tells a story that goes nowhere, says "what?", or checks their phone.','If you make someone laugh while they\'re drinking, they owe you a sip.','Last person with a story each round gets to make a new "soft rule."','Last one standing orders food. Financially responsible drunk wins.'],ftg:['Stroop Round: GM holds up colours. Say the OBJECT colour, not the name. Wrong? Sip.','One player reads FTG colour-word combos. Fail? Two sips.','Speed round: name 5 things in a category while maintaining eye contact. Hesitate = drink.'],forfeits:['Tell an embarrassing story from primary school.','Do an impression of someone in the room.','Text your boss a genuine compliment.','Show everyone your most recent selfie.']},party:{rules:['Drinks up. Every player starts with a full cup.','Round structure: each player draws a role — Truth, Dare, or Drink.','Refuse a dare = 2 sips. Lie on a truth and get caught = finish your drink.','When someone yells "CHAOS CARD", everyone freezes. Last to freeze drinks.','Best energy each round gets to assign a "penalty sip" to anyone.','Waterfall rule: whenever GM starts drinking, everyone drinks until GM stops.','No pointing. No saying "drink" — say "hydrate" or pay.'],ftg:['FTG Speed Test: GM flashes coloured cards. Wrong answer = shot.','Reverse Stroop: someone reads random words. If it\'s a colour, say anything BUT that colour.','Colour Clash: everyone picks a colour. Duplicates = both drink.','The F-Word Rule: pick a common banned word. Anyone who says it drinks.'],forfeits:['Do a body shot off someone (consensually).','Let the group go through your camera roll for 30 seconds.','Send a voice note of "meow" to your last text contact.','Post "I think I\'m a Muppet" on your story.','Shotgun a drink. The group rates your form.','Call your ex and say "I finally understand why you left" then hang up.']},chaos:{rules:['This is not a game. This is a test of will. Shots ready.','Every player starts with a "death drink" — whatever that means to you.','Round of Chaos: everyone performs simultaneously. Last to finish drinks double.','The "No Safety" rule: nothing off limits except physical harm and being a dick.','If you hesitate on any challenge, finish your drink. No mercy.','Most bathroom visits buys the next round.','Survivor rule: whoever lasts longest assigns 3 drinks to anyone.','If you say "I\'m fine" — drink to prove you\'re not.'],ftg:['Berserk Stroop Mode: GM screams colour words while music blasts. One wrong = shot.','Drunk Brain Test: simple maths (7×8, 23+19) while group yells random numbers. Fail = shot.','Double Vision: cover one eye and try reading text. Wrong = drink.','FTG Gauntlet: recite alphabet backwards while someone flashes coloured cards. Every mistake = shot.','The "FUCK" Exception: play one round of actual FTG. Laugh = drink.'],forfeits:['Eat a raw onion for 15 seconds.','Shotgun two drinks back to back.','Let someone wax a strip of your leg hair.','Do a trust fall blindfolded from a chair.','Call a random number and try to order pizza.','Let someone crack an egg on your head.','Do the cinnamon challenge.','Go outside and scream "I AM THE CHAOS."']}};
+const BONUS=['Everyone drinks if anyone says "game."','Toast the host. Host drinks.','Youngest player invents a new rule.','Swap drinks with the person on your left for one round.','Silent round: anyone who speaks drinks.','Accent round: terrible accents. Break = drink.','Everyone texts "I love you" to the 3rd contact.','Compliment battle: first person who can\'t think of one drinks.','Rhyme time: speak only in rhymes for 60 seconds. Fail = drink.','The floor is lava for 30 seconds. Touch = drink.'];
+
+let vibe='chill',drink='beer',currentGame=null;
+
+function selVibe(v){vibe=v;document.querySelectorAll('#vibePills .pill').forEach(p=>{p.className='pill';if(p.dataset.vibe===v)p.classList.add('selected-'+v)});gsap.fromTo('#vibePills .pill.selected-'+v,{scale:0.9},{scale:1,duration:0.3,ease:'back.out(1.7)'})}
+function selDrink(d){drink=d;document.querySelectorAll('#drinkPills .pill').forEach(p=>{p.className='pill';if(p.dataset.drink===d)p.classList.add('selected-drink')});gsap.fromTo('#drinkPills .pill.selected-drink',{scale:0.9},{scale:1,duration:0.3,ease:'back.out(1.7)'})}
+
+function generate(){
+  const players=parseInt(document.getElementById('players').value);
+  const t=TMPL[vibe];
+  const name=NAMES[vibe][Math.floor(Math.random()*NAMES[vibe].length)];
+  const shuf=arr=>[...arr].sort(()=>Math.random()-0.5);
+  const pick=(arr,n)=>shuf(arr).slice(0,Math.min(n,arr.length));
+  const drinkNames={beer:'beer',spirits:'spirits',wine:'wine',shots:'shots',mixed:'cocktails'};
+
+  currentGame={name,players,vibe,drink:drinkNames[drink]};
+
+  document.getElementById('gameName').textContent=name;
+  document.getElementById('gameSubtitle').textContent=players+' players · '+{chill:'Chill',party:'Party',chaos:'Chaos'}[vibe]+' vibes · '+drinkNames[drink];
+
+  const buildCard=(title,items,icon,cls)=>{
+    const div=document.createElement('div');div.className='game-card '+cls;
+    div.innerHTML='<h3>'+icon+' '+title+'</h3><ul>'+items.map(i=>'<li><span class="icon">'+icon+'</span>'+i+'</li>').join('')+'</ul>';
+    return div;
+  };
+
+  const container=document.getElementById('cardsContainer');
+  container.innerHTML='';
+  container.appendChild(buildCard('Rules',pick(t.rules,4+Math.floor(players/3)),'📜',''));
+  container.appendChild(buildCard('FTG Chaos Challenges',pick(t.ftg,Math.min(3,t.ftg.length)),'🧠',''));
+  container.appendChild(buildCard('Forfeits',pick(t.forfeits,3+Math.floor(players/4)),'⚡',''));
+  container.appendChild(buildCard('Bonus Chaos Cards',pick(BONUS,3),'🎲',''));
+
+  document.getElementById('setup').style.display='none';
+  const result=document.getElementById('result');result.style.display='block';
+
+  // Staggered card reveal animation
+  const cards=container.querySelectorAll('.game-card');
+  gsap.set(cards,{opacity:0,y:30,scale:0.95});
+  gsap.to(cards,{opacity:1,y:0,scale:1,duration:0.5,stagger:0.1,ease:'back.out(1.3)'});
+  gsap.fromTo('#gameName',{opacity:0,y:-15},{opacity:1,y:0,duration:0.5,ease:'power3.out'});
+  gsap.fromTo('#gameSubtitle',{opacity:0},{opacity:1,duration:0.4,delay:0.15});
+  gsap.fromTo('.btn-row',{opacity:0,y:10},{opacity:1,y:0,duration:0.4,delay:0.5});
+
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+  track('generate',vibe,drink);
+}
+
+function newGame(){
+  document.getElementById('setup').style.display='block';
+  document.getElementById('result').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+  gsap.fromTo('#setup',{opacity:0,y:15},{opacity:1,y:0,duration:0.45,ease:'power3.out'});
+  track('new_game');
+}
+
+function shareGame(){
+  if(!currentGame)return;
+  const t='We\'re playing "'+currentGame.name+'" — '+currentGame.players+' players, '+currentGame.vibe+' vibes. Generate yours: https://drink.f--kthegame.com';
+  if(navigator.share){navigator.share({title:currentGame.name,text:t,url:'https://drink.f--kthegame.com'})}
+  else{navigator.clipboard.writeText(t);showToast('Copied! Send it to the group 🍻')}
+  track('share');
+}
+
+function showToast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;
+  gsap.to(el,{opacity:1,duration:0.3,y:-10,ease:'power2.out'});
+  gsap.to(el,{opacity:0,duration:0.3,delay:2,y:0,ease:'power2.in'});
+}
+
+function track(a,c,l){if(typeof gtag!=='undefined')gtag('event',a,{event_category:c,event_label:l})}
+function trackCTA(){if(typeof gtag!=='undefined')gtag('event','cta_click',{event_category:'conversion',event_label:'ftg_deck'})}
+
+document.querySelectorAll('#vibePills .pill').forEach(p=>p.addEventListener('click',()=>selVibe(p.dataset.vibe)));
+document.querySelectorAll('#drinkPills .pill').forEach(p=>p.addEventListener('click',()=>selDrink(p.dataset.drink)));
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const tl=gsap.timeline();
+  tl.fromTo('#header',{opacity:0,y:-20},{opacity:1,y:0,duration:0.6,ease:'power3.out'});
+  tl.fromTo('#setup',{opacity:0,y:12},{opacity:1,y:0,duration:0.5,ease:'power2.out'},'-=0.25');
+  tl.fromTo('#cta',{opacity:0,y:10},{opacity:1,y:0,duration:0.5,ease:'power2.out'},'-=0.2');
+});
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</body>
+</html>

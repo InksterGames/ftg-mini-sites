@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Truth or Chaos — Spicy Truth or Dare | FTG</title>
+<meta name="description" content="The adult Truth or Dare generator. Mild, spicy, wild, couples. 200+ questions. No repeats. Share the chaos.">
+<meta property="og:title" content="Truth or Chaos — Spicy Truth or Dare Generator">
+<meta property="og:description" content="200+ spicy truths and dares. Pick your poison.">
+<meta property="og:image" content="https://truthorchaos.f--kthegame.com/og.png">
+<meta property="og:url" content="https://truthorchaos.f--kthegame.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Truth or Chaos — Spicy Truth or Dare Generator">
+<meta name="twitter:description" content="200+ spicy truths and dares. Pick your poison.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Truth or Chaos","description":"Adult Truth or Dare generator with multiple intensity levels and 200+ questions","applicationCategory":"GameApplication","url":"https://truthorchaos.f--kthegame.com/","operatingSystem":"All"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How does Truth or Chaos work?","acceptedAnswer":{"@type":"Answer","text":"Pick a category. Choose Truth, Dare, or Drink. Get a random question. No repeats. Share your favourites."}},
+  {"@type":"Question","name":"How many questions are there?","acceptedAnswer":{"@type":"Answer","text":"Over 200 hand-picked truths, dares, and drinking prompts across four categories."}},
+  {"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Completely free. No signup. No download."}}
+]}
+</script>
+<style>
+:root {
+  --bg: #121212;
+  --surface: #181818;
+  --surface-hover: #1f1f1f;
+  --elevated: #252525;
+  --text: #ffffff;
+  --text-secondary: #b3b3b3;
+  --accent: #e83e8c;
+  --accent2: #ff6b35;
+  --border: #4d4d4d;
+  --mild: #00c9a7;
+  --spicy: #e83e8c;
+  --wild: #ff1744;
+  --couples: #7c4dff;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.container { width: 100%; max-width: 480px; padding: 24px 16px; }
+
+header { text-align: center; padding: 20px 0 8px; opacity: 0; }
+.logo-tag { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; }
+h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.5px; line-height: 1.05; }
+h1 .grad { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.subtitle { font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px; font-weight: 400; }
+
+.category-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 20px 0 8px; opacity: 0; }
+.pill {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+  user-select: none;
+  letter-spacing: 0.01em;
+}
+.pill:hover { background: var(--surface-hover); color: var(--text); }
+.pill.active-mild { border-color: var(--mild); background: rgba(0,201,167,0.10); color: var(--mild); }
+.pill.active-spicy { border-color: var(--spicy); background: rgba(232,62,140,0.10); color: var(--spicy); }
+.pill.active-wild { border-color: var(--wild); background: rgba(255,23,68,0.10); color: var(--wild); }
+.pill.active-couples { border-color: var(--couples); background: rgba(124,77,255,0.10); color: var(--couples); }
+
+.choice-row { display: flex; gap: 10px; margin: 12px 0; opacity: 0; }
+.choice-btn {
+  flex: 1; padding: 14px 8px; border-radius: 9999px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+  text-align: center; letter-spacing: 0.02em;
+}
+.choice-btn:hover { background: var(--surface-hover); }
+.choice-btn.truth-active { border-color: var(--mild); background: rgba(0,201,167,0.10); color: var(--mild); }
+.choice-btn.dare-active { border-color: var(--wild); background: rgba(255,23,68,0.10); color: var(--wild); }
+.choice-btn.drink-active { border-color: var(--accent2); background: rgba(255,107,53,0.10); color: var(--accent2); }
+
+.draw-btn {
+  width: 100%; padding: 18px; border-radius: 9999px; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-size: 1.05rem; font-weight: 900; cursor: pointer;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  transition: transform 0.15s, box-shadow 0.25s; margin: 8px 0 16px;
+  box-shadow: 0 0 0 0 rgba(232,62,140,0.4);
+}
+.draw-btn:active { transform: scale(0.97); }
+.draw-btn:hover { box-shadow: 0 0 32px 4px rgba(232,62,140,0.25); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 20px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  margin: 8px 0 12px;
+  box-shadow: rgba(0,0,0,0.3) 0px 8px 8px;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+.card-label {
+  position: absolute; top: -12px; left: 24px;
+  font-size: 0.65rem; font-weight: 900; letter-spacing: 2px;
+  text-transform: uppercase; padding: 5px 14px; border-radius: 9999px;
+  background: var(--surface); border: 1px solid var(--border);
+}
+.card-label.truth-label { color: var(--mild); border-color: var(--mild); }
+.card-label.dare-label { color: var(--wild); border-color: var(--wild); }
+.card-label.drink-label { color: var(--accent2); border-color: var(--accent2); }
+.card-text { font-size: 1.25rem; line-height: 1.45; font-weight: 600; }
+.card-category { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-secondary); margin-top: 16px; }
+
+.counter { text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
+
+.action-row { display: flex; gap: 10px; opacity: 0; }
+.action-btn {
+  flex: 1; padding: 12px; border-radius: 9999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font-size: 0.85rem;
+  font-weight: 700; cursor: pointer; text-align: center;
+  transition: background 0.25s; letter-spacing: 0.02em;
+}
+.action-btn:hover { background: var(--surface-hover); }
+.action-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+.action-btn.primary:hover { background: #d4347c; }
+
+.cta-bar { text-align: center; padding: 24px 12px 32px; opacity: 0; }
+.cta-bar a {
+  display: inline-block; background: var(--surface); border: 1px solid var(--accent);
+  color: var(--accent); padding: 11px 28px; border-radius: 9999px;
+  font-weight: 700; text-decoration: none; font-size: 0.85rem;
+  transition: all 0.25s; letter-spacing: 0.02em;
+}
+.cta-bar a:hover { background: var(--accent); color: #fff; }
+.cta-bar p { color: var(--text-secondary); font-size: 0.78rem; margin-top: 8px; }
+.cta-tag { font-size: 0.65rem; color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+
+.toast {
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff; padding: 12px 28px; border-radius: 9999px;
+  font-weight: 700; font-size: 0.85rem; z-index: 99;
+  opacity: 0; pointer-events: none;
+  box-shadow: 0 8px 32px rgba(232,62,140,0.4);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header id="header">
+    <h1>Truth or <span class="grad">Chaos</span></h1>
+    <p class="subtitle">200+ questions. No repeats. Maximum regret.</p>
+  </header>
+
+  <div class="category-pills" id="cats">
+    <div class="pill active-mild" data-cat="mild">🌿 Mild</div>
+    <div class="pill" data-cat="spicy">🌶️ Spicy</div>
+    <div class="pill" data-cat="wild">🔥 Wild</div>
+    <div class="pill" data-cat="couples">💕 Couples</div>
+  </div>
+
+  <div class="choice-row" id="choices">
+    <button class="choice-btn truth-active" data-mode="truth">Truth</button>
+    <button class="choice-btn" data-mode="dare">Dare</button>
+    <button class="choice-btn" data-mode="drink">Drink</button>
+  </div>
+
+  <div class="counter" id="counter">200 questions ready</div>
+
+  <button class="draw-btn" id="drawBtn" onclick="draw()">Draw a Card</button>
+
+  <div class="card" id="card" style="opacity:0; transform:scale(0.9)">
+    <div class="card-label truth-label" id="cardLabel">TRUTH</div>
+    <div class="card-text" id="cardText">Choose a category and hit Draw</div>
+    <div class="card-category" id="cardCategory">MILD MODE</div>
+  </div>
+
+  <div class="action-row" id="actions">
+    <button class="action-btn" onclick="draw()">New Card</button>
+    <button class="action-btn primary" onclick="shareResult()">Share</button>
+  </div>
+
+  <div class="cta-bar" id="cta">
+    <a href="https://www.f--kthegame.com" target="_blank" rel="noopener" onclick="trackCTA()">If this got your group talking, there's a card game that'll have them crying laughing →</a>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const Q = {
+  mild:{truth:[
+    "What's the most embarrassing song on your playlist?",
+    "Have you ever pretended to like a gift you actually hated?",
+    "What's the weirdest thing you've Googled this week?",
+    "What's the last lie you told?",
+    "Have you ever stalked someone's ex on social media?",
+    "What's your most irrational fear?",
+    "What's the longest you've gone without showering?",
+    "Have you ever eaten food off the floor?",
+    "What's your guilty pleasure TV show?",
+    "Have you ever ghosted someone? Why?",
+    "What's the pettiest thing you've ever done?",
+    "What's the worst haircut you've ever had?",
+    "Have you ever sent a text to the wrong person?",
+    "What's the worst advice you've ever given?",
+    "Have you ever fallen asleep in a public place?",
+    "What's the most useless talent you have?",
+    "Have you ever cried at a TV commercial?",
+    "What's your worst habit nobody knows about?",
+    "Have you ever re-gifted something? To who?",
+    "What's the most awkward thing you've said on a date?"
+  ],dare:[
+    "Do your best impression of the person to your left.",
+    "Speak in an Australian accent for the next 3 rounds.",
+    "Let the group pick your phone wallpaper tonight.",
+    "Do 10 star jumps while singing I'm a Little Teapot.",
+    "Post an eggplant emoji on Instagram with no context.",
+    "Swap one clothing item with the person on your right.",
+    "Talk like Yoda for the next 5 minutes.",
+    "Let someone draw on your face with a marker.",
+    "Take the ugliest selfie you can. Show the group.",
+    "Do the chicken dance for 15 seconds.",
+    "Text your mum 'I just wanted to say I love you.'",
+    "Balance a spoon on your nose for 10 seconds.",
+    "Speak only in a whisper for the next 3 rounds.",
+    "Let the group go through your camera roll for 30 seconds.",
+    "Do your best catwalk across the room.",
+    "Send a voice note of just 'meow' to your last contact.",
+    "Close your eyes and let someone feed you something.",
+    "Dramatic reading of the last text you received.",
+    "Stand on one leg for the rest of this round.",
+    "Let someone style your hair however they want."
+  ],drink:[
+    "Take a sip if you've ever drunk-texted an ex.",
+    "Everyone who's been on a dating app this month, drink.",
+    "Drink if you've ever laughed so hard you snorted.",
+    "Take a shot if you've ever walked into a glass door.",
+    "Sip if you've ever pretended to be sick to get out of something.",
+    "Everyone who's been caught singing in the car, drink.",
+    "Drink if your most-used emoji is the crying-laughing face.",
+    "Take a sip if you've ever forgotten someone's name mid-conversation.",
+    "Everyone who's eaten cold pizza for breakfast, drink.",
+    "Drink if you've ever fallen UP the stairs.",
+    "Take a sip if you've said 'you too' when a waiter said 'enjoy.'",
+    "Everyone who has a finsta or burner account, drink.",
+    "Drink if you've ever watched an entire series in one sitting.",
+    "Take a sip if you've ever tripped over absolutely nothing.",
+    "Everyone who's screen time is over 5 hours today, drink."
+  ]},
+  spicy:{truth:[
+    "What's the most questionable place you've hooked up?",
+    "Have you ever had a crush on a friend's partner?",
+    "What's the worst thing you've done while drunk?",
+    "What's the most embarrassing thing in your search history?",
+    "Have you ever lied to get out of a date?",
+    "What's the biggest age gap you've had?",
+    "What possession of yours would be hardest to explain to your grandmother?",
+    "Have you ever hooked up with someone whose name you didn't remember?",
+    "What's the strangest thing you find attractive?",
+    "Have you ever sent nudes to the wrong person?",
+    "Have you ever been the reason a couple broke up?",
+    "What's the most you've spent trying to impress someone?",
+    "Have you ever propositioned someone in a wildly inappropriate setting?",
+    "What's your worst dating app story?",
+    "What's the most embarrassing thing that's happened during intimacy?",
+    "Have you ever looked through a partner's phone without permission?",
+    "What's the worst thing you've said behind someone's back?",
+    "Have you ever lied about your relationship status?",
+    "What secret would ruin you if it came out at this party?",
+    "Have you ever had a crush on a coworker?"
+  ],dare:[
+    "Send 'I can't stop thinking about last night' to the 3rd person in contacts.",
+    "Let the group read your last 5 DMs out loud.",
+    "Do a body shot off someone in the room (with consent).",
+    "Take off one clothing item for the next 3 rounds.",
+    "Send a voice note to your best friend: 'I just saw a ghost. Call me.'",
+    "Let someone go through your Uber history and read destinations aloud.",
+    "Give a 30-second lap dance to a chair with eye contact.",
+    "Call a random number and try to order a pizza. Stay in character.",
+    "Post a photo of your feet with the caption 'rate my toes.'",
+    "Let someone take an unflattering photo and set it as your profile pic for 1hr.",
+    "Text your ex 'I still have your hoodie' (even if you don't).",
+    "Do your best seductive walk to fetch a drink.",
+    "Let the group write your next Instagram caption.",
+    "Record yourself saying 'daddy chill' and send to a random contact.",
+    "Give the person on your right a sensual 30-second shoulder massage.",
+    "Scroll to a random year in your camera roll and show every photo.",
+    "Blindfolded, let the group guide you around the room for 60 seconds.",
+    "Dramatic reading of a spicy passage from any book in the room.",
+    "Send the 👀 emoji to the last person who liked your post.",
+    "Speak in a slow sultry voice for the next 5 minutes."
+  ],drink:[
+    "Take a shot if you've ever had a dream about someone in this room.",
+    "Drink if you've ever used 'Netflix and chill' sincerely.",
+    "Everyone who's been on a date that lasted under 30 minutes, drink.",
+    "Take a sip if you've ever sent a risky text and instantly regretted it.",
+    "Drink if you've ever had a crush on a teacher or boss.",
+    "Everyone who's been kicked out of a bar or club, drink.",
+    "Take a shot if you've ever kissed someone whose name you didn't know.",
+    "Drink if you've ever been caught checking someone out.",
+    "Sip if you've lied about your number. You know which number.",
+    "Everyone who has a 'special folder' on their phone, drink.",
+    "Take a drink if you've ever been walked in on.",
+    "Drink if you've matched with someone you already knew in real life.",
+    "Sip if you've used a cheesy pickup line that actually worked.",
+    "Everyone who's hooked up at a wedding, drink.",
+    "Take a shot if you've ghosted someone after more than 3 dates."
+  ]},
+  wild:{truth:[
+    "What's the most illegal thing you've ever done?",
+    "Have you ever been caught in the act? By who?",
+    "What's the most you've ever drunk in one night?",
+    "Have you ever been arrested or come close?",
+    "Who in this room would you most want to be stuck in a lift with? Least?",
+    "What's the most desperate thing you've done for attention?",
+    "Have you ever stolen something? What was it?",
+    "What's the worst thing you've said during an argument?",
+    "Have you ever had a physical fight? What happened?",
+    "What's the worst thing a partner has caught you doing?",
+    "Have you ever been fired? Why?",
+    "What's the most humiliating thing that's ever happened to you?",
+    "Have you ever damaged property and run away?",
+    "What would you do if you were invisible for a day?",
+    "Have you ever been the villain in someone else's story?",
+    "What's the most reckless thing you've done on a dare?",
+    "Have you ever lied to the police? About what?",
+    "What's the worst decision you've made at a party?",
+    "Have you ever had to physically run away from a situation?",
+    "What secret about you would your family be shocked to learn?"
+  ],dare:[
+    "Call your ex and say 'I finally understand why you left.' Hang up.",
+    "Let the group post one thing from your phone to a group chat.",
+    "Eat a spoonful of hot sauce with eye contact for 30 seconds.",
+    "Do a trust fall blindfolded from a chair.",
+    "Text your boss 'I've been meaning to tell you something.' Don't reply for 1hr.",
+    "Let someone give you a temporary tattoo in a visible place.",
+    "Shotgun a drink. Learn now if you've never done it.",
+    "Trade phones with someone for the next 10 minutes. No deleting.",
+    "Call your parents and tell them you're dropping everything to become a mime.",
+    "Let the group pick your outfit for the rest of the night.",
+    "Do the cinnamon challenge with a teaspoon.",
+    "Post a photo of yourself crying with 'life is beautiful.'",
+    "Do a handstand against the wall for as long as you can.",
+    "Let someone wax a strip of your leg or arm hair.",
+    "Chug a mystery drink the group prepares for you.",
+    "Go outside and shout 'I AM THE CHAOS.'",
+    "Eat a raw onion like an apple for 20 seconds.",
+    "Call a random business and ask if they sell happiness.",
+    "Do 20 push-ups while singing the national anthem.",
+    "Let someone crack 2 raw eggs on your head."
+  ],drink:[
+    "Take a shot if you've ever thrown up at a party and kept going.",
+    "Everyone who's blacked out and been told about it, drink.",
+    "Drink if you've ever been the drunkest person in the room.",
+    "Take a shot if you've ever woken up somewhere unexpected.",
+    "Sip if you've ever drunk something you couldn't identify.",
+    "Everyone who's broken something while drunk, drink.",
+    "Take a shot if you've ever gone to work hungover.",
+    "Drink if you've ever sent something you desperately wish you could unsend.",
+    "Shot for everyone who's ever cried while drunk.",
+    "Drink if you've ever walked home barefoot because you lost your shoes.",
+    "Take a shot if you've said 'I'm never drinking again' and meant it.",
+    "Everyone who's been carried home or carried someone, drink.",
+    "Drink if you've ever woken up with something you don't remember buying.",
+    "Sip if you've done a 'walk of shame' and it was worth it.",
+    "Take a shot if you're probably going to regret something tonight."
+  ]},
+  couples:{truth:[
+    "What was your first impression of your partner? Be brutal.",
+    "What's something you wish your partner would do more often?",
+    "What's the most attractive thing your partner does without realising?",
+    "Have you ever kept a secret from your partner?",
+    "What's the one thing they do that drives you crazy?",
+    "If you could change one thing about your relationship?",
+    "What's the silliest thing you've argued about?",
+    "When did you know you were in love?",
+    "What's your biggest fear about your relationship?",
+    "What would you do differently if you could restart?",
+    "What memory with your partner makes you smile every time?",
+    "What's something non-physical that turns you on about them?",
+    "Have you ever been jealous of your partner?",
+    "What's the kindest thing they've ever done for you?",
+    "If you could read their thoughts for 24 hours, would you?",
+    "What's the most vulnerable you've been with them?",
+    "What's one thing you pretend to like that they do?",
+    "What's a dream you have that involves your partner?",
+    "What's the hardest conversation you've had as a couple?",
+    "If your relationship was a song, what would the title be?"
+  ],dare:[
+    "Feed each other a piece of food. Blindfolded.",
+    "Slow dance for 60 seconds to whatever song is in your head.",
+    "Maintain eye contact for 60 seconds without breaking.",
+    "Whisper something you love about your partner. Mean it.",
+    "Give your partner a 2-minute massage. They rate it.",
+    "Recreate your first kiss. Everyone watches.",
+    "Take a couple selfie, caption: 'found this one on clearance.'",
+    "Do 30 seconds of your partner's favourite dance move.",
+    "Draw a portrait of your partner in 1 minute. Show the group.",
+    "Switch outfits with your partner for the next round.",
+    "Give your partner a piggyback ride across the room.",
+    "Tell the story of how you met in movie-trailer voice.",
+    "Do a trust fall into your partner's arms.",
+    "Take a shot together without using your hands.",
+    "Serenade your partner. The group picks the song.",
+    "Let your partner do your makeup. Results are final.",
+    "Arm wrestle your partner. Winner gets a wish.",
+    "Take turns listing things you love. First to pause loses.",
+    "Do a dramatic reading of your partner's last text to you.",
+    "Write a quick love note and read it out loud to them."
+  ],drink:[
+    "Take a sip if you've ever had a fight over text.",
+    "Both drink if you've ever been late because of, you know.",
+    "Sip if your partner has seen you cry.",
+    "Drink if you've ever planned your future together.",
+    "Take a sip if your partner knows your phone password.",
+    "Both drink if you've cooked a disastrous meal for each other.",
+    "Sip if you've ever had makeup sex.",
+    "Drink if you have a song that's 'your song.'",
+    "Both drink if you've ever fallen asleep on each other.",
+    "Take a sip if you've sent a spicy photo to your partner.",
+    "Drink if you'd still choose your partner on a dating app today.",
+    "Sip if your partner has seen you at your absolute worst.",
+    "Both take a shot if you'd do it all over again.",
+    "Drink if you've stayed up all night talking.",
+    "Take a sip if you're going home together tonight."
+  ]}
+};
+
+let cat='mild', mode='truth', used={}, currentQ='';
+['mild','spicy','wild','couples'].forEach(k=>used[k]={truth:[],dare:[],drink:[]});
+
+function selCat(c){
+  cat=c;document.querySelectorAll('.pill').forEach(p=>{p.className='pill';if(p.dataset.cat===c)p.classList.add('active-'+c)});
+  gsap.to('#cats .pill',{duration:0.3,scale:1,stagger:0.04,ease:'power2.out'});
+  gsap.fromTo('#cats .pill.active-'+c,{scale:0.9},{scale:1,duration:0.35,ease:'back.out(1.7)'});
+  updateCount();
+}
+function selMode(m){
+  mode=m;document.querySelectorAll('.choice-btn').forEach(b=>{b.className='choice-btn';if(b.dataset.mode===m)b.classList.add(m+'-active')});
+  gsap.fromTo('#choices .choice-btn.'+m+'-active',{scale:0.9},{scale:1,duration:0.35,ease:'back.out(1.7)'});
+  document.getElementById('cardText').textContent='Choose a category and hit Draw';
+  document.getElementById('cardLabel').className='card-label '+m+'-label';
+  document.getElementById('cardLabel').textContent=m.toUpperCase();
+  updateCount();
+}
+function updateCount(){
+  const pool=Q[cat][mode], rem=pool.length-(used[cat][mode]||[]).length;
+  document.getElementById('counter').textContent=rem+' '+(mode==='truth'?'Truths':mode==='dare'?'Dares':'Drinks')+' remaining';
+}
+
+function draw(){
+  const pool=Q[cat][mode], u=used[cat][mode];
+  const avail=pool.filter((_,i)=>!u.includes(i));
+  if(!avail.length){used[cat][mode]=[];setTimeout(draw,400);return;}
+  const idx=pool.indexOf(avail[Math.floor(Math.random()*avail.length)]);
+  u.push(idx);currentQ=pool[idx];
+  
+  const card=document.getElementById('card'), label=document.getElementById('cardLabel');
+  label.textContent=mode.toUpperCase();label.className='card-label '+mode+'-label';
+  document.getElementById('cardText').textContent=currentQ;
+  document.getElementById('cardCategory').textContent=cat.toUpperCase()+' MODE';
+
+  // Card draw animation — flips in from below
+  const tl=gsap.timeline();
+  tl.set(card,{opacity:0,scale:0.85,y:30,rotationX:15});
+  tl.to(card,{opacity:1,scale:1,y:0,rotationX:0,duration:0.5,ease:'back.out(1.4)'});
+  tl.fromTo('.card-label',{opacity:0,y:-8},{opacity:1,y:0,duration:0.3,ease:'power2.out'},'-=0.2');
+  tl.fromTo('.card-text',{opacity:0,y:10},{opacity:1,y:0,duration:0.35,ease:'power2.out'},'-=0.15');
+  tl.fromTo('.card-category',{opacity:0},{opacity:1,duration:0.3},'-=0.1');
+  
+  // Draw button pulse
+  gsap.fromTo('#drawBtn',{scale:1},{scale:1.03,duration:0.2,yoyo:true,repeat:1,ease:'power2.out'});
+  
+  updateCount();
+  track('draw',cat,mode);
+}
+
+function shareResult(){
+  if(!currentQ)return;
+  const t=`${mode.toUpperCase()}: ${currentQ}\n\nPlaying Truth or Chaos — FTG edition. Your turn: https://truthorchaos.f--kthegame.com`;
+  if(navigator.share){navigator.share({title:'Truth or Chaos',text:t,url:'https://truthorchaos.f--kthegame.com'})}
+  else{navigator.clipboard.writeText(t);showToast("Copied! Share it 🔥")}
+  track('share',cat,mode);
+}
+
+function showToast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;
+  gsap.to(el,{opacity:1,duration:0.3,y:-10,ease:'power2.out'});
+  gsap.to(el,{opacity:0,duration:0.3,delay:2,y:0,ease:'power2.in'});
+}
+
+function track(a,c,m){if(typeof gtag!=='undefined')gtag('event',a,{event_category:c,event_label:m})}
+function trackCTA(){if(typeof gtag!=='undefined')gtag('event','cta_click',{event_category:'conversion',event_label:'ftg_deck'})}
+
+document.querySelectorAll('.pill').forEach(p=>p.addEventListener('click',()=>selCat(p.dataset.cat)));
+document.querySelectorAll('.choice-btn').forEach(b=>b.addEventListener('click',()=>selMode(b.dataset.mode)));
+
+// Entrance animation
+window.addEventListener('DOMContentLoaded',()=>{
+  const tl=gsap.timeline();
+  tl.fromTo('#header',{opacity:0,y:-20},{opacity:1,y:0,duration:0.6,ease:'power3.out'});
+  tl.fromTo('#cats',{opacity:0,y:12},{opacity:1,y:0,duration:0.5,ease:'power2.out'},'-=0.25');
+  tl.fromTo('#choices',{opacity:0,y:8},{opacity:1,y:0,duration:0.4,ease:'power2.out'},'-=0.2');
+  tl.fromTo('#counter',{opacity:0},{opacity:1,duration:0.3},'-=0.15');
+  tl.fromTo('#drawBtn',{opacity:0,scale:0.9,y:10},{opacity:1,scale:1,y:0,duration:0.5,ease:'back.out(1.4)'},'-=0.1');
+  tl.fromTo('#cta',{opacity:0,y:10},{opacity:1,y:0,duration:0.5,ease:'power2.out'},'-=0.2');
+  updateCount();
+});
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</body>
+</html>

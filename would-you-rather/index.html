@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Would You Rather — Spicy Party Edition | FTG</title>
+<meta name="description" content="200+ Would You Rather questions. Funny, dirty, dark, impossible choices. The game that starts arguments. FTG edition.">
+<meta property="og:title" content="Would You Rather — Spicy Party Edition | FTG">
+<meta property="og:description" content="200+ Would You Rather questions. The game that starts arguments.">
+<meta property="og:image" content="https://wouldyourather.f--kthegame.com/og.png">
+<meta property="og:url" content="https://wouldyourather.f--kthegame.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Would You Rather — Spicy Party Edition | FTG">
+<meta name="twitter:description" content="Endless Would You Rather. Choose your chaos level.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Would You Rather — FTG Edition","description":"Would You Rather question generator with 200+ questions across funny, dirty, party, dark, couples, and impossible categories","applicationCategory":"GameApplication","url":"https://wouldyourather.f--kthegame.com/","operatingSystem":"All"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How many Would You Rather questions are there?","acceptedAnswer":{"@type":"Answer","text":"Over 200 questions across 6 categories: Funny, Dirty, Party, Dark, Couples, and Impossible. New questions are shuffled so you rarely see the same one twice."}},
+  {"@type":"Question","name":"Can I play as a drinking game?","acceptedAnswer":{"@type":"Answer","text":"Yes! Classic rule: whichever option the group votes against, you drink. Or — can't decide? Drink. Simple."}},
+  {"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Completely free. No signup. No limits."}}
+]}
+</script>
+<style>
+:root {
+  --bg: #121212; --surface: #181818; --surface-hover: #1f1f1f;
+  --text: #ffffff; --text-secondary: #b3b3b3;
+  --accent: #bf5af2; --accent2: #ff6b35; --border: #4d4d4d;
+  --opt-a: #7c4dff; --opt-b: #ff6b35;
+  --funny: #ffc107; --dirty: #e83e8c; --party: #ff6b35;
+  --dark: #aa00ff; --couples: #00c9a7; --impossible: #ff1744;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center;
+  overflow-x: hidden; -webkit-font-smoothing: antialiased;
+}
+.container { width: 100%; max-width: 480px; padding: 24px 16px; }
+header { text-align: center; padding: 20px 0 8px; opacity: 0; }
+.logo-tag { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; }
+h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1.2px; line-height: 1.05; }
+h1 .grad { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.subtitle { font-size: 0.88rem; color: var(--text-secondary); margin-top: 4px; font-weight: 400; }
+
+.pill-scroll {
+  display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 16px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none; opacity: 0;
+}
+.pill-scroll::-webkit-scrollbar { display: none; }
+.pill {
+  padding: 8px 16px; border-radius: 9999px; font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); white-space: nowrap;
+  transition: all 0.25s cubic-bezier(0.25,0.1,0.25,1);
+  user-select: none; flex-shrink: 0; letter-spacing: 0.01em;
+}
+.pill:hover { background: var(--surface-hover); color: var(--text); }
+.pill.active-funny { border-color: var(--funny); background: rgba(255,193,7,0.10); color: var(--funny); }
+.pill.active-dirty { border-color: var(--dirty); background: rgba(232,62,140,0.10); color: var(--dirty); }
+.pill.active-party { border-color: var(--party); background: rgba(255,107,53,0.10); color: var(--party); }
+.pill.active-dark { border-color: var(--dark); background: rgba(170,0,255,0.10); color: var(--dark); }
+.pill.active-couples { border-color: var(--couples); background: rgba(0,201,167,0.10); color: var(--couples); }
+.pill.active-impossible { border-color: var(--impossible); background: rgba(255,23,68,0.10); color: var(--impossible); }
+
+.counter { text-align: center; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
+
+.generate-btn {
+  width: 100%; padding: 18px; border-radius: 9999px; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-size: 1.05rem; font-weight: 900; cursor: pointer;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  transition: transform 0.15s, box-shadow 0.25s; margin: 8px 0 16px;
+  box-shadow: 0 0 0 0 rgba(191,90,242,0.4);
+}
+.generate-btn:active { transform: scale(0.97); }
+.generate-btn:hover { box-shadow: 0 0 32px 4px rgba(191,90,242,0.25); }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 32px 20px; min-height: 220px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; margin: 8px 0 12px;
+  box-shadow: rgba(0,0,0,0.3) 0px 8px 8px;
+  will-change: transform, opacity;
+}
+.card-label { font-size: 0.65rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+.card-question { font-size: 1.2rem; font-weight: 600; line-height: 1.45; }
+.option-row { display: flex; gap: 10px; margin-top: 20px; width: 100%; }
+.option {
+  flex: 1; padding: 14px 8px; border-radius: 9999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-secondary); font-size: 0.85rem;
+  font-weight: 700; cursor: pointer; text-align: center;
+  transition: all 0.25s cubic-bezier(0.25,0.1,0.25,1);
+  letter-spacing: 0.02em; user-select: none;
+}
+.option.opt-a { border-color: var(--opt-a); }
+.option.opt-a:hover, .option.opt-a.picked { background: rgba(124,77,255,0.15); color: var(--opt-a); border-color: var(--opt-a); }
+.option.opt-b { border-color: var(--opt-b); }
+.option.opt-b:hover, .option.opt-b.picked { background: rgba(255,107,53,0.15); color: var(--opt-b); border-color: var(--opt-b); }
+
+.action-row { display: flex; gap: 10px; opacity: 0; }
+.action-btn {
+  flex:1; padding: 12px; border-radius: 9999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font-size: 0.85rem;
+  font-weight: 700; cursor: pointer; text-align: center;
+  transition: background 0.25s; letter-spacing: 0.02em;
+}
+.action-btn:hover { background: var(--surface-hover); }
+.action-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+.action-btn.primary:hover { background: #a540e0; }
+
+.cta-bar { text-align: center; padding: 24px 12px 32px; opacity: 0; }
+.cta-bar a {
+  display: inline-block; background: var(--surface); border: 1px solid var(--accent);
+  color: var(--accent); padding: 11px 28px; border-radius: 9999px;
+  font-weight: 700; text-decoration: none; font-size: 0.85rem;
+  transition: all 0.25s; letter-spacing: 0.02em;
+}
+.cta-bar a:hover { background: var(--accent); color: #fff; }
+.cta-bar p { color: var(--text-secondary); font-size: 0.78rem; margin-top: 8px; }
+.cta-tag { font-size: 0.65rem; color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; }
+
+.toast {
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff; padding: 12px 28px; border-radius: 9999px;
+  font-weight: 700; font-size: 0.85rem; z-index: 99;
+  opacity: 0; pointer-events: none;
+  box-shadow: 0 8px 32px rgba(191,90,242,0.4);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header id="header">
+    <h1>Would You <span class="grad">Rather</span></h1>
+    <p class="subtitle">200+ questions. Infinite arguments. Your turn.</p>
+  </header>
+
+  <div class="pill-scroll" id="cats">
+    <div class="pill active-funny" data-cat="funny">😂 Funny</div>
+    <div class="pill" data-cat="dirty">🌶️ Dirty</div>
+    <div class="pill" data-cat="party">🎉 Party</div>
+    <div class="pill" data-cat="dark">🖤 Dark</div>
+    <div class="pill" data-cat="couples">💕 Couples</div>
+    <div class="pill" data-cat="impossible">💀 Impossible</div>
+  </div>
+
+  <div class="counter" id="counter">200+ questions ready</div>
+
+  <button class="generate-btn" id="genBtn" onclick="draw()">Generate Question</button>
+
+  <div class="card" id="card" style="opacity:0; transform:scale(0.9)">
+    <div class="card-label">WOULD YOU RATHER</div>
+    <div class="card-question" id="cardQuestion">Pick a category and hit Generate</div>
+    <div class="option-row" id="options" style="display:none">
+      <button class="option opt-a" id="optA" onclick="pick('a')">Option A</button>
+      <button class="option opt-b" id="optB" onclick="pick('b')">Option B</button>
+    </div>
+  </div>
+
+  <div class="action-row" id="actions">
+    <button class="action-btn" onclick="draw()">New Question</button>
+    <button class="action-btn primary" onclick="shareResult()">Share</button>
+  </div>
+
+  <div class="cta-bar" id="cta">
+    <a href="https://www.f--kthegame.com" target="_blank" rel="noopener" onclick="trackCTA()">Enjoyed the dilemmas? There's a card game that makes deciding between these look easy →</a>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const WYR={funny:[
+  "always have to sing instead of speaking... OR always have to dance instead of walking?",
+  "have a permanently runny nose... OR permanently itchy feet?",
+  "have farts visible as a green cloud... OR burps that come out as bubbles?",
+  "be chased by one horse-sized duck... OR fifty duck-sized horses?",
+  "shout everything you say... OR whisper everything?",
+  "always be 10 minutes late... OR always 45 minutes early?",
+  "have fingers as long as your legs... OR legs as long as your fingers?",
+  "sneeze confetti... OR cry glitter?",
+  "have a third arm growing out of your back... OR a second head that always disagrees with you?",
+  "be unable to recognise faces... OR unable to remember names?",
+  "have random dance breaks happen in public... OR random opera singing moments?",
+  "always have bad breath... OR always smell bad breath on others?",
+  "have hair change colour based on your mood... OR skin change colour?",
+  "have a rewind button for your life... OR a pause button?",
+  "only communicate through memes... OR only through GIFs?",
+  "always know when someone is lying... OR always get away with lying?",
+  "wear a clown wig everywhere... OR full clown makeup everywhere?",
+  "be famous for something embarrassing... OR completely forgotten after you die?",
+  "have spaghetti for hair... OR broccoli for fingers?",
+  "talk to animals but they all hate you... OR be unable to talk to animals but they all love you?",
+  "your laugh sound like a car alarm... OR your sneeze sound like a foghorn?",
+  "sleep hanging upside down... OR eat everything through a straw?",
+  "have a personal soundtrack everyone can hear... OR subtitles floating above your head?",
+  "only walk backwards... OR only talk backwards?",
+  "have hands for feet... OR feet for hands?"
+],dirty:[
+  "only have sex with the lights on... OR only with the lights off, forever?",
+  "your partner be incredibly loud... OR completely silent?",
+  "accidentally send a spicy photo to your boss... OR to your parents?",
+  "have terrible sex with someone ridiculously hot... OR amazing sex with someone you're not attracted to?",
+  "your sex life be broadcast as a reality show... OR your finances?",
+  "get walked in on by your parents... OR walk in on your parents?",
+  "accidentally like your ex's photo from 2017... OR accidentally send a thirst DM to your boss?",
+  "be unbelievably good looking but terrible in bed... OR average looking but legendary?",
+  "narrate everything during sex like a nature documentary... OR only speak in baby talk?",
+  "find out your partner has a secret OF account... OR a secret gambling debt?",
+  "have vanilla sex for life with your soulmate... OR wild sex with randoms but never find love?",
+  "be caught doing the walk of shame by your entire extended family... OR your entire workplace?",
+  "your partner calls out the wrong name... OR has no reaction at all?",
+  "be the best someone's ever had but they never tell you... OR be the worst but they lie and say you're amazing?",
+  "your parents read your spicy DMs... OR your spicy DMs get leaked to a small gossipy group chat?",
+  "have to give a detailed recap of your last hookup to this room... OR show your last 10 liked posts?",
+  "have a ridiculously high body count everyone knows about... OR be a virgin but everyone thinks you've slept with 100 people?",
+  "only get turned on by spreadsheets... OR only by clowns?",
+  "your partner be into roleplay but it's always very cringe... OR completely unadventurous but very intense?",
+  "find someone's spicy photos on a friend's phone... OR have a friend find yours?"
+],party:[
+  "be the drunkest person at the party... OR the most sober?",
+  "do a body shot off a stranger... OR let a stranger do one off you?",
+  "accidentally send a risky text to your boss... OR your mum?",
+  "sing karaoke sober... OR give a speech drunk?",
+  "be the first person to arrive at a party... OR the last person to leave?",
+  "be known as the person who always cries when drunk... OR always fights when drunk?",
+  "have your search history shown to this room... OR your camera roll?",
+  "do 5 shots back to back... OR streak through the backyard?",
+  "let a stranger go through your phone for 2 minutes... OR give a stranger your number?",
+  "throw up at the party and rally... OR go home early and miss the best part?",
+  "do a trust fall off a chair blindfolded... OR eat a raw onion for 30 seconds?",
+  "be dared to make out with the person on your left... OR tell them your most embarrassing secret?",
+  "re-enact your first kiss in front of everyone... OR show everyone your worst photo?",
+  "be the person who starts the drama... OR the person who has to fix it?",
+  "take a shot every time someone says your name... OR every time you check your phone?",
+  "do the cinnamon challenge... OR eat a whole raw onion?",
+  "shotgun two drinks back to back... OR do a keg stand?",
+  "wear your clothes inside out for the rest of the night... OR speak only in an accent until sunrise?",
+  "post a crying selfie with 'life is beautiful'... OR post a thirst trap tagging your boss?",
+  "let someone draw on your face... OR shave a strip of your hair?"
+],dark:[
+  "know the exact date of your death... OR the exact cause?",
+  "relive your worst day once a year... OR forget your happiest memory?",
+  "be completely alone for the rest of your life... OR surrounded by people who secretly hate you?",
+  "save one family member from certain death... OR save five strangers?",
+  "be wrongly convicted of a crime... OR have someone you love be wrongly convicted?",
+  "know what everyone truly thinks of you... OR have no one know what you truly think?",
+  "die in 10 years having lived fully... OR live to 90 in complete mediocrity?",
+  "be completely forgotten within a year of death... OR remembered for the worst thing you ever did?",
+  "experience the death of everyone you love... OR die before any of them?",
+  "lose all your memories but keep your identity... OR lose your identity but keep your memories?",
+  "be the cause of a tragedy that kills strangers... OR witness a tragedy that kills your loved ones?",
+  "always know when someone will die... OR always know who will betray you?",
+  "live through a zombie apocalypse alone... OR a nuclear winter with strangers?",
+  "press a button that kills someone random... OR someone presses it and kills you?",
+  "your biggest secret exposed to everyone you know... OR someone else's secret costs them everything?",
+  "know the world will end in exactly one year... OR never know when it ends?",
+  "be the last human alive... OR the first human to die in the apocalypse?",
+  "read minds but can't turn it off... OR be unable to tell when people lie?",
+  "be forced to betray your best friend... OR have them betray you?",
+  "find out your whole life has been a simulation... OR find out you're the only real person?"
+],couples:[
+  "your partner be best friends with their ex... OR hate all their exes and talk about it constantly?",
+  "find out your partner has a secret savings account... OR a secret credit card?",
+  "have a partner who is extremely jealous... OR one who doesn't care at all?",
+  "your partner reads your DMs... OR your search history?",
+  "have wild sex but zero emotional connection... OR deep connection but boring sex?",
+  "be the one who loves more... OR be loved more?",
+  "have a partner who is always right and knows it... OR always wrong but thinks they're right?",
+  "catch your partner in a small lie... OR in a big lie but years later?",
+  "have a partner who's a 10 but terrible with money... OR a 6 who is financially brilliant?",
+  "live with your in-laws for a year... OR have them live with you?",
+  "your partner be extremely clingy... OR extremely distant?",
+  "be proposed to in public and hate it... OR never get a proposal at all?",
+  "your partner forgets your anniversary... OR your birthday?",
+  "have a partner who's a terrible cook but loves cooking... OR amazing cook who never cooks?",
+  "be single and rich... OR married and struggling?",
+  "your partner goes through your phone once... OR you go through theirs once?",
+  "have a partner whose career comes first... OR who puts you above everything?",
+  "say exactly what you're thinking during sex... OR have your partner say exactly what they're thinking?",
+  "be with someone exactly like your parent... OR exactly the opposite?",
+  "your partner cries during every argument... OR shuts down completely?"
+],impossible:[
+  "only be able to whisper... OR only be able to shout?",
+  "lose the ability to read... OR lose the ability to speak?",
+  "fight a grizzly bear with a butter knife... OR swim shark-infested waters with a paper cut?",
+  "have unlimited money but die at 40... OR live to 100 with just enough to survive?",
+  "know everything but be unable to communicate it... OR know nothing but be incredibly persuasive?",
+  "live in a mansion alone forever... OR a tiny room with 20 people you love?",
+  "be the funniest person alive but no one laughs... OR be painfully unfunny but everyone laughs at everything you say?",
+  "teleport but only to places you've never been... OR fly but only at walking speed?",
+  "eat the same meal for every meal forever... OR never eat the same thing twice?",
+  "have a 10-second memory... OR remember every second of your life perfectly?",
+  "have no internet for a year... OR no human contact for a year?",
+  "lose the ability to lie... OR lose the ability to tell the truth?",
+  "be covered in tattoos you didn't choose... OR get a new piercing every month?",
+  "only travel within 100km of home... OR never stay in one place more than a week?",
+  "have super strength but only when sad... OR super speed but only when scared?",
+  "be invisible but only when no one is looking... OR read minds but only thoughts about you?",
+  "restart your life from birth with all memories intact... OR fast-forward 10 years with a guaranteed amazing life?",
+  "be the smartest person in a world of idiots... OR the dumbest in a world of geniuses?",
+  "never feel physical pain again... OR never feel emotional pain again?",
+  "be stranded on a desert island with your worst enemy... OR on a cruise ship with 500 people who all hate you?",
+  "fight a clone of yourself to the death... OR fight 10 toddlers at once?",
+  "bring one person back from the dead... OR prevent one person from dying?",
+  "know the answer to one question about the universe... OR solve one problem facing humanity?"
+]};
+
+let cat='funny', currentQ='', used={};
+Object.keys(WYR).forEach(k=>used[k]=[]);
+
+function selCat(c){
+  cat=c;document.querySelectorAll('#cats .pill').forEach(p=>{p.className='pill';if(p.dataset.cat===c)p.classList.add('active-'+c)});
+  document.getElementById('cat'+c)?.scrollIntoView?.({behavior:'smooth',block:'nearest',inline:'center'});
+  gsap.fromTo('#cats .pill.active-'+c,{scale:0.9},{scale:1,duration:0.35,ease:'back.out(1.7)'});
+  updateCount();
+  document.getElementById('cardQuestion').textContent='Pick a category and hit Generate';
+  document.getElementById('options').style.display='none';
+}
+function updateCount(){
+  const pool=WYR[cat],rem=pool.length-(used[cat]||[]).length;
+  document.getElementById('counter').textContent=rem+' questions in this category';
+}
+
+function draw(){
+  const pool=WYR[cat],u=used[cat];
+  const avail=pool.filter((_,i)=>!u.includes(i));
+  if(!avail.length){used[cat]=[];setTimeout(draw,300);return;}
+  const idx=pool.indexOf(avail[Math.floor(Math.random()*avail.length)]);
+  u.push(idx);currentQ=pool[idx];
+
+  document.getElementById('cardQuestion').textContent='would you rather... '+currentQ;
+  document.getElementById('options').style.display='flex';
+  document.getElementById('optA').className='option opt-a';
+  document.getElementById('optB').className='option opt-b';
+
+  const card=document.getElementById('card');
+  const tl=gsap.timeline();
+  tl.set(card,{opacity:0,scale:0.88,y:20});
+  tl.to(card,{opacity:1,scale:1,y:0,duration:0.5,ease:'back.out(1.4)'});
+  tl.fromTo('#options .option',{opacity:0,y:8},{opacity:1,y:0,duration:0.3,stagger:0.08,ease:'power2.out'},'-=0.25');
+
+  gsap.fromTo('#genBtn',{scale:1},{scale:1.03,duration:0.2,yoyo:true,repeat:1,ease:'power2.out'});
+  updateCount();
+  track('draw',cat);
+}
+
+function pick(opt){
+  document.getElementById('optA').className='option opt-a'+(opt==='a'?' picked':'');
+  document.getElementById('optB').className='option opt-b'+(opt==='b'?' picked':'');
+  gsap.fromTo(opt==='a'?'#optA':'#optB',{scale:0.9},{scale:1,duration:0.25,ease:'back.out(1.5)'});
+  track('pick',cat,opt);
+}
+
+function shareResult(){
+  if(!currentQ)return;
+  const t='would you rather... '+currentQ+'\n\nPlaying Would You Rather — FTG edition. Your turn: https://wouldyourather.f--kthegame.com';
+  if(navigator.share){navigator.share({title:'Would You Rather — FTG',text:t,url:'https://wouldyourather.f--kthegame.com'})}
+  else{navigator.clipboard.writeText(t);showToast('Copied! Drop it in the group 👀')}
+  track('share');
+}
+
+function showToast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;
+  gsap.to(el,{opacity:1,duration:0.3,y:-10,ease:'power2.out'});
+  gsap.to(el,{opacity:0,duration:0.3,delay:2,y:0,ease:'power2.in'});
+}
+
+function track(a,c,l){if(typeof gtag!=='undefined')gtag('event',a,{event_category:c,event_label:l})}
+function trackCTA(){if(typeof gtag!=='undefined')gtag('event','cta_click',{event_category:'conversion',event_label:'ftg_deck'})}
+
+document.querySelectorAll('#cats .pill').forEach(p=>p.addEventListener('click',()=>selCat(p.dataset.cat)));
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const tl=gsap.timeline();
+  tl.fromTo('#header',{opacity:0,y:-20},{opacity:1,y:0,duration:0.6,ease:'power3.out'});
+  tl.fromTo('#cats',{opacity:0,y:12},{opacity:1,y:0,duration:0.5,ease:'power2.out'},'-=0.25');
+  tl.fromTo('#counter',{opacity:0},{opacity:1,duration:0.3},'-=0.15');
+  tl.fromTo('#genBtn',{opacity:0,scale:0.9,y:10},{opacity:1,scale:1,y:0,duration:0.5,ease:'back.out(1.4)'},'-=0.1');
+  tl.fromTo('#cta',{opacity:0,y:10},{opacity:1,y:0,duration:0.5,ease:'power2.out'},'-=0.2');
+  updateCount();
+});
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</body>
+</html>
